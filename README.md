@@ -9,7 +9,7 @@ Click to open flash content on web pages in Flash Player. This lets you run flas
 You will need npm and Node.js installed (for now).
 
 1. Download this repository
-2. Run `npm install -g pm2` to install pm2
+2. Run `npm install -g pm2` to install pm2 (may need to run as root)
 3. If on Windows, run `npm install -g pm2-windows-startup`
 4. `cd` to this repository
 5. Run `npm install`
