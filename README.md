@@ -12,10 +12,11 @@ You will need npm and Node.js installed (for now).
 2. Run `npm install -g pm2` to install pm2
 3. If on Windows, run `npm install -g pm2-windows-startup`
 4. `cd` to this repository
-5. Run `pm2 start index.js` 
-6. Run `pm2-startup install` on Windows or `pm2 startup` on other platforms.
-7. Run `pm2 save`
-8. Install the [Chrome Extension](https://github.com/jamesgrams/pull-up-flash-extension) in your browser.
+5. Run `npm install`
+6. Run `pm2 start index.js` 
+7. Run `pm2-startup install` on Windows or `pm2 startup` on other platforms.
+8. Run `pm2 save`
+9. Install the [Chrome Extension](https://github.com/jamesgrams/pull-up-flash-extension) in your browser.
 
 ## Full Description
 
