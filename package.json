@@ -13,12 +13,8 @@
     "npm": ">= 3.0.0"
   },
   "scripts": {
-    "start": "node index.js"
-  },
-  "pkg": {
-    "scripts": "index.js",
-    "assets": "assets/*",
-    "outputPath": "dist"
+    "start": "node index.js",
+    "build": "pkg index.js -c pkg-windows.json -o dist/pull-up-flash-win.exe && pkg index.js -c pkg-linux.json -o dist/pull-up-flash-linux && pkg index.js -c pkg-mac.json -o dist/pull-up-flash-macos"
   },
   "bin": {
     "pull-up-flash": "index.js"

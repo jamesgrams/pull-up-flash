@@ -14,12 +14,12 @@ Click to open flash content on web pages in Flash Player. This lets you run flas
 
 ## Building
 
-You will need npm and Node.js installed.
+You will need npm and Node.js installed. You will also need `pkg` installed (`npm install -g pkg`).
 
 1. Download this repository
 2. `cd` to this repository
 3. Run `npm install`
-4. Run `pkg .`
+4. Run `npm build`
 5. The binaries will be located in the `dist` folder.
 
 ## Testing

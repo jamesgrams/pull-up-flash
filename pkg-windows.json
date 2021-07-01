@@ -1,0 +1,7 @@
+{
+  "pkg": {
+    "scripts": "index.js",
+    "assets": "assets/flashplayer.exe",
+    "targets": ["node12-win-x64"]
+  }
+}
