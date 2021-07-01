@@ -41,8 +41,9 @@ if( process.pkg ) {
         fs.mkdirSync(assetsFolder, { recursive: true });
     }
     if( !fs.existsSync(assetsFolder + assetsFile ) ) {
-        fs.createReadStream(__dirname + "/" + ASSETS_DIR + assetsFile).pipe(fs.createWriteStream(assetsFolder + assetsFile));
-        fs.chmodSync(assetsFolder + assetsFile, 0o765); // make executable
+        fs.createReadStream(__dirname + "/" + ASSETS_DIR + assetsFile).pipe(fs.createWriteStream(assetsFolder + assetsFile)).on("finish", () => {
+            fs.chmodSync(assetsFolder + assetsFile, 0o755); // make executable
+        });
     }
 }
 else {
@@ -92,7 +93,12 @@ function writeResponse( response, status, object, code, contentType ) {
 function launchFlash( url ) {
     if( !url ) return Promise.reject();
 
-    proc.execFile(command, [url]);
+    try {
+        proc.execFile(command, [url]);
+    }
+    catch(err) {
+        console.log(err);
+    }
     return Promise.resolve();
 }
 
