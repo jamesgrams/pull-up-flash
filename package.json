@@ -14,5 +14,13 @@
   },
   "scripts": {
     "start": "node index.js"
+  },
+  "pkg": {
+    "scripts": "index.js",
+    "assets": "assets/*",
+    "outputPath": "dist"
+  },
+  "bin": {
+    "pull-up-flash": "index.js"
   }
 }

@@ -6,17 +6,21 @@ Click to open flash content on web pages in Flash Player. This lets you run flas
 
 ### Requirements
 
-You will need npm and Node.js installed (for now).
+## Installing
+
+1. Download and run the appropriate binary for your operating system from the releases section.
+2. Optionally, follow appropriate steps to make this binary run on startup.
+3. Install the [Chrome Extension](https://github.com/jamesgrams/pull-up-flash-extension) in your browser.
+
+## Building
+
+You will need npm and Node.js installed.
 
 1. Download this repository
-2. Run `npm install -g pm2` to install pm2 (may need to run as root)
-3. If on Windows, run `npm install -g pm2-windows-startup`
-4. `cd` to this repository
-5. Run `npm install`
-6. Run `pm2 start index.js` 
-7. Run `pm2-startup install` on Windows or `pm2 startup` on other platforms. If the command gives you another command to run, then do it.
-8. Run `pm2 save`
-9. Install the [Chrome Extension](https://github.com/jamesgrams/pull-up-flash-extension) in your browser.
+2. `cd` to this repository
+3. Run `npm install`
+4. Run `pkg .`
+5. The binaries will be located in the `dist` folder.
 
 ## Full Description
 

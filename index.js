@@ -5,14 +5,50 @@
 
 const express = require("express");
 const proc = require("child_process");
+const fs = require("fs");
 
 const PORT = 35274; // Port to run on FLASH
 const HTTP_OK = 200;
 const HTTP_SERVER_ERROR = 500;
 const SUCCESS = "success";
 const FAILURE = "failure";
+const ASSETS_DIR = "assets/";
+const HOME = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
 
 const app = express();
+
+let assetsFolder = "";
+let assetsFile = "";
+let command = "";
+switch(process.platform) {
+    case "darwin":
+        assetsFolder = HOME + "/Library/Application Support/Pull Up Flash/";
+        assetsFile = "flashplayer.dmg";
+        break;
+    case "win32":
+        assetsFolder = HOME + "/AppData/Local/Pull Up Flash/";
+        assetsFile = "flashplayer.exe";
+        break;
+    case "linux":
+        assetsFolder = HOME + "/.Pull Up Flash/";
+        assetsFile = "flashplayer";
+        break;
+    default:
+        return Promise.reject();
+}
+if( process.pkg ) {
+    if( !fs.existsSync(assetsFolder) ) {
+        fs.mkdirSync(assetsFolder, { recursive: true });
+    }
+    if( !fs.existsSync(assetsFolder + assetsFile ) ) {
+        fs.createReadStream(__dirname + "/" + ASSETS_DIR + assetsFile).pipe(fs.createWriteStream(assetsFolder + assetsFile));
+        fs.chmodSync(assetsFolder + assetsFile, 0o765); // make executable
+    }
+}
+else {
+    assetsFolder = ASSETS_DIR; // can use the local directory if not in a package (packaged assets aren't available to child_process)
+}
+command = assetsFolder + assetsFile;
 
 /**
  * Run a URL in Flash Player.
@@ -56,20 +92,6 @@ function writeResponse( response, status, object, code, contentType ) {
 function launchFlash( url ) {
     if( !url ) return Promise.reject();
 
-    let command = "";
-    switch(process.platform) {
-        case "darwin":
-            command = "assets/flashplayer.dmg";
-            break;
-        case "win32":
-            command = "assets/flashplayer.exe";
-            break;
-        case "linux":
-            command = "assets/flashplayer";
-            break;
-        default:
-            return Promise.reject();
-    }
     proc.execFile(command, [url]);
     return Promise.resolve();
 }
