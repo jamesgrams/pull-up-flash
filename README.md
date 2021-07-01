@@ -9,6 +9,7 @@ Click to open flash content on web pages in Flash Player. This lets you run flas
 ## Installing
 
 1. Download and run the appropriate binary for your operating system from the releases section.
+    * On Mac and Linux, you will likely have to make the file executable.
 2. Optionally, follow appropriate steps to make this binary run on startup.
 3. Install the [Chrome Extension](https://github.com/jamesgrams/pull-up-flash-extension) in your browser.
 
