@@ -22,6 +22,10 @@ You will need npm and Node.js installed.
 4. Run `pkg .`
 5. The binaries will be located in the `dist` folder.
 
+## Testing
+
+You can simply run `npm start` after running `npm install` to test.
+
 ## Full Description
 
 The Flash Player web plugin is no longer supported, but Flash player for desktop is still [distributed by Adobe](https://www.adobe.com/support/flashplayer/debug_downloads.html). Pull Up Flash allows you to easily run Flash content by replacing it on web pages with a button you can click to open the game or movie in Flash Player for desktop.
