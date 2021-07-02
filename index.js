@@ -6,6 +6,7 @@
 const express = require("express");
 const proc = require("child_process");
 const fs = require("fs");
+const windowManager = require("node-window-manager").windowManager;
 
 const PORT = 35274; // Port to run on FLASH
 const HTTP_OK = 200;
@@ -14,6 +15,7 @@ const SUCCESS = "success";
 const FAILURE = "failure";
 const ASSETS_DIR = "assets/";
 const HOME = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
+const MAX_TRIES = 200;
 
 const app = express();
 
@@ -94,7 +96,16 @@ function launchFlash( url ) {
     if( !url ) return Promise.reject();
 
     try {
-        proc.execFile(command, [url]);
+        let spawned = proc.execFile(command, [url]);
+        let tries = 0;
+        function focus() {
+            tries ++;
+            if( tries > MAX_TRIES ) return;
+            let window = windowManager.getWindows().filter(el => el.processId === spawned.pid  && el.getBounds().width > 0);
+            if( window.length < 2 ) setTimeout( focus, 50 );
+            else window[0].bringToTop();
+        }
+        focus();
     }
     catch(err) {
         console.log(err);

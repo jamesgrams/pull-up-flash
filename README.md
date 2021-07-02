@@ -13,6 +13,10 @@ Click to open flash content on web pages in Flash Player. This lets you run flas
 2. Optionally, follow appropriate steps to make this binary run on startup.
 3. Install the [Chrome Extension](https://github.com/jamesgrams/pull-up-flash-extension) in your browser.
 
+### Additonal Notes
+
+*. On Ubuntu with Nvidia drivers, you may get some strange displays. You will need to disable hardware acceleration by right clicking the game/movie in Flash Player > Settings > Disable Hardware Acceleration.
+
 ## Building
 
 You will need npm and Node.js installed. You will also need `pkg` installed (`npm install -g pkg`).
@@ -20,6 +24,7 @@ You will need npm and Node.js installed. You will also need `pkg` installed (`np
 1. Download this repository
 2. `cd` to this repository
 3. Run `npm install`
+    * Note: You need the version of node on your computer to match the version of node `pkg` will bundle.
 4. Run `npm build`
 5. The binaries will be located in the `dist` folder.
 

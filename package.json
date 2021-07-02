@@ -6,7 +6,8 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "node-window-manager": "^2.2.4"
   },
   "engines": {
     "node": ">= 6.0.0",
