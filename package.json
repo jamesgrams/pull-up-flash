@@ -7,10 +7,7 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.17.1",
-    "node-window-manager": "^2.2.4",
-    "pm2": "^5.1.0",
-    "pm2-windows-startup": "^1.0.3",
-    "minimist": "^1.2.5"
+    "node-window-manager": "^2.2.4"
   },
   "engines": {
     "node": ">= 6.0.0",

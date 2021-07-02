@@ -6,8 +6,6 @@ Click to open flash content on web pages in Flash Player. This lets you run flas
 
 ### Requirements
 
-You will need to be running on Windows or Linux with Mac support coming soon. You will need a 64 bit operating system.
-
 ## Installing
 
 1. Download and run the appropriate binary for your operating system from the releases section.
