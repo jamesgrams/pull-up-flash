@@ -1,6 +1,6 @@
 {
   "pkg": {
-    "scripts": "index.js",
+    "scripts": ["index.js", "installer.js"],
     "assets": "assets/flashplayer",
     "targets": ["node12-linux-x64"]
   }

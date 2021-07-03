@@ -7,7 +7,9 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.17.1",
-    "node-window-manager": "^2.2.4"
+    "node-window-manager": "^2.2.4",
+    "start-on-windows-boot": "^1.0.0",
+    "minimist": "^1.2.5"
   },
   "engines": {
     "node": ">= 6.0.0",
@@ -15,7 +17,7 @@
   },
   "scripts": {
     "start": "node index.js",
-    "build": "pkg index.js -c pkg-windows.json -o dist/pull-up-flash-win.exe && pkg index.js -c pkg-linux.json -o dist/pull-up-flash-linux && pkg index.js -c pkg-mac.json -o dist/pull-up-flash-macos"
+    "build": "pkg index.js -c pkg-windows.json -o dist/pull-up-flash-win-standalone.exe && pkg index.js -c pkg-linux.json -o dist/pull-up-flash-linux-standalone && pkg index.js -c pkg-mac.json -o dist/pull-up-flash-macos-standalone && pkg installer.js -c pkg-windows.json -o dist/pull-up-flash-win.exe && pkg installer.js -c pkg-linux.json -o dist/pull-up-flash-linux && pkg installer.js -c pkg-mac.json -o dist/pull-up-flash-macos"
   },
   "bin": {
     "pull-up-flash": "index.js"

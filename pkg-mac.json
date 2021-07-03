@@ -1,6 +1,6 @@
 {
   "pkg": {
-    "scripts": "index.js",
+    "scripts": ["index.js", "installer.js"],
     "assets": "assets/flashplayer.dmg",
     "targets": ["node12-macos-x64"]
   }

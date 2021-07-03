@@ -3,22 +3,39 @@
  * @author James Grams
  */
 
+// TODO
+// Get startup working on Linux and Mac
+// Get .dmg working on Mac
+// Never quit - catch errors and restart
+// security considerations
+
+/******************************* Configuration *******************************/
+
 const express = require("express");
 const proc = require("child_process");
 const fs = require("fs");
+const path = require("path");
 const windowManager = require("node-window-manager").windowManager;
+const startOnBoot = require('start-on-windows-boot');
+const minimist = require("minimist");
 
 const PORT = 35274; // Port to run on FLASH
 const HTTP_OK = 200;
 const HTTP_SERVER_ERROR = 500;
 const SUCCESS = "success";
 const FAILURE = "failure";
-const ASSETS_DIR = "assets/";
+const ASSETS_DIR = "assets" + path.sep;
 const HOME = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
 const MAX_TRIES = 200;
+const SCRIPT_FILE = "index.js";
+const NAME = "Pull Up Flash";
+const INSTALLER_TITLE = "pull-up-flash-installer";
+const TITLE = "pull-up-flash";
+const INVISIBLE_VBS = "invisible.vbs";
+const STARTUP_BAT = "startup.bat";
 
-const app = express();
-
+let execFile = "";
+let argv = require("minimist")(process.argv.slice(2));
 let assetsFolder = "";
 let assetsFile = "";
 let command = "";
@@ -28,7 +45,7 @@ switch(process.platform) {
         assetsFile = "flashplayer.dmg";
         break;
     case "win32":
-        assetsFolder = HOME + "/AppData/Local/Pull Up Flash/";
+        assetsFolder = HOME + "\\AppData\\Local\\Pull Up Flash\\";
         assetsFile = "flashplayer.exe";
         break;
     case "linux":
@@ -38,36 +55,168 @@ switch(process.platform) {
     default:
         return Promise.reject();
 }
-if( process.pkg ) {
-    if( !fs.existsSync(assetsFolder) ) {
-        fs.mkdirSync(assetsFolder, { recursive: true });
-    }
-    if( !fs.existsSync(assetsFolder + assetsFile ) ) {
-        fs.createReadStream(__dirname + "/" + ASSETS_DIR + assetsFile).pipe(fs.createWriteStream(assetsFolder + assetsFile)).on("finish", () => {
-            fs.chmodSync(assetsFolder + assetsFile, 0o755); // make executable
-        });
-    }
-}
-else {
+if( !process.pkg && !argv.install ) {
     assetsFolder = ASSETS_DIR; // can use the local directory if not in a package (packaged assets aren't available to child_process)
 }
 command = assetsFolder + assetsFile;
 
+/******************************* Functions *******************************/
+
 /**
- * Run a URL in Flash Player.
+ * Main function.
  */
-app.get("/run", (request, response) => {
-    console.log( "serving /run with query " + JSON.stringify(request.query) );
-    try {
-        launchFlash(request.query.url);
-        writeResponse(response, SUCCESS);
+ async function main() {
+    // The installer will copy itself to the assets folder
+    // once there, we don't want it to install next time - we want it to run.
+    let execFolder = process.execPath;
+    execFolder = process.execPath.split(path.sep);
+    execFile = execFolder.pop();
+    execFolder = execFolder.join(path.sep) + path.sep;
+
+    // set up needed files to run standalone or not
+    if( !fs.existsSync(assetsFolder) ) {
+        fs.mkdirSync(assetsFolder, { recursive: true });
+        // Copy the binary, installer script and the assets file over
+        await copyFile( __dirname + path.sep + ASSETS_DIR + assetsFile, assetsFolder + assetsFile );
     }
-    catch(err) {
-        console.log(err);
-        writeResponse(response, FAILURE, null, HTTP_SERVER_ERROR);
+
+    if( argv.install && execFolder !== assetsFolder ) await install();
+    else run();
+}
+main();
+
+/**
+ * Install.
+ * Note install will only really work if packaged, since we copy the binary.
+ * The binary for non-packaged is node.js
+ */
+async function install() {
+    process.title = INSTALLER_TITLE;
+
+    function complete() {
+        console.log("Process is complete. You can delete the installer if you like.");
+        console.log("Press any key to exit...");
+        process.stdin.setRawMode(true);
+        process.stdin.resume();
+        process.stdin.on('data', process.exit.bind(process, 0));
     }
-    
-});
+
+    console.log("---------------------------------------------------------");
+    console.log("--------------------Pull Up Flash------------------------");
+    console.log("---------------------------------------------------------");
+    // Copy all the files to the real file system
+    console.log("Detecting existing installation");
+    if( !fs.existsSync(assetsFolder+execFile) ) {
+        console.log("No existing installation found. Installing...");
+        console.log("Copying files...");
+        // Copy the pull up flash binary
+        let binary = process.execPath;
+        let binaryFilename = binary.split(path.sep);
+        binaryFilename = binaryFilename[binaryFilename.length-1];
+        await copyFile( binary, assetsFolder + binaryFilename );
+
+        let startupCommand = "";
+        if( process.platform === "win32" ) {
+            // copy the invisible vbs
+            await copyFile(__dirname + path.sep + ASSETS_DIR + INVISIBLE_VBS, assetsFolder + INVISIBLE_VBS);
+            startupCommand = `wscript.exe "${assetsFolder + INVISIBLE_VBS}" "${assetsFolder + binaryFilename}"`;
+            // pkg cannot access wscript.exe, so we have to run a BAT file.
+            // start up will not require this
+            fs.writeFileSync(assetsFolder + STARTUP_BAT, startupCommand);
+        }
+
+        console.log("Starting instance...");
+        proc.spawn( assetsFolder + STARTUP_BAT, {
+            detached: true
+        } );
+
+        console.log("Enabling autostart...");
+        switch( process.platform ) {
+            case "win32":
+                startOnBoot.enableAutoStart( NAME, startupCommand, complete );
+                break;
+        }
+    }
+    else {
+        console.log("Existing installation found. Uninstalling...");
+
+        console.log("Stopping any current instance...");
+        try {
+            switch( process.platform ) {
+                case "win32":
+                    proc.execSync(`taskkill /FI "WINDOWTITLE ne ${INSTALLER_TITLE}" /IM ${execFile} /F /T`);
+                    break;
+            }
+        }
+        catch(err) {
+            // ok
+        }
+
+        console.log("Deleting files...");
+        try {
+            fs.rmdirSync(assetsFolder, { recursive: true });
+        }
+        catch(err) {
+            // ok
+            console.log(err);
+        }
+
+        console.log("Disabling autostart...");
+        switch( process.platform ) {
+            case "win32":
+                startOnBoot.disableAutoStart( NAME, complete );
+                break;
+        }
+    }
+
+    return Promise.resolve();
+}
+
+ /**
+  * Copy a file in such a way that won't crash pkg by making system calls
+  * @param {string} source - The source file location.
+  * @param {string} destination - The destination file location.
+  */
+function copyFile( source, destination ) {
+    return new Promise( (resolve, reject) => {
+        try {
+            fs.createReadStream(source).pipe(fs.createWriteStream(destination)).on("finish", () => {
+                fs.chmodSync(destination, 0o755); // make executable
+                resolve();
+            });
+        }
+        catch(err) {
+            reject(err);
+        }
+    } );
+}
+
+/**
+ * Run the server.
+ */
+function run() {
+    process.title = TITLE;
+
+    const app = express();
+
+    /**
+     * Run a URL in Flash Player.
+     */
+    app.get("/run", (request, response) => {
+        console.log( "serving /run with query " + JSON.stringify(request.query) );
+        try {
+            launchFlash(request.query.url);
+            writeResponse(response, SUCCESS);
+        }
+        catch(err) {
+            console.log(err);
+            writeResponse(response, FAILURE, null, HTTP_SERVER_ERROR);
+        }
+        
+    });
+
+    app.listen(PORT);
+}
 
 /**
  * Send a response to the user.
@@ -112,5 +261,3 @@ function launchFlash( url ) {
     }
     return Promise.resolve();
 }
-
-app.listen(PORT);

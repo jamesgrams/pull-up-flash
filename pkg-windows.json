@@ -1,7 +1,11 @@
 {
   "pkg": {
-    "scripts": "index.js",
-    "assets": ["assets/flashplayer.exe", "node_modules/node-window-manager/build/Release/*"],
+    "scripts": ["index.js", "installer.js"],
+    "assets": [
+      "assets/flashplayer.exe", 
+      "node_modules/node-window-manager/build/Release/*",
+      "assets/invisible.vbs"
+    ],
     "targets": ["node12-win-x64"]
   }
 }
