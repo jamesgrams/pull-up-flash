@@ -4,7 +4,7 @@
  */
 
 // TODO
-// Get startup working on Linux and Mac
+// Get startup working on Mac
 // Get .dmg working on Mac
 // Never quit - catch errors and restart
 // security considerations
@@ -15,9 +15,13 @@ const express = require("express");
 const proc = require("child_process");
 const fs = require("fs");
 const path = require("path");
-const windowManager = require("node-window-manager").windowManager;
-const startOnBoot = require('start-on-windows-boot');
-const minimist = require("minimist");
+const sudo = require('sudo-prompt');
+let windowManager;
+let startOnBoot;
+if( process.platform === "win32" ) {
+    windowManager = require("node-window-manager").windowManager;
+    startOnBoot = require('start-on-windows-boot');
+}
 
 const PORT = 35274; // Port to run on FLASH
 const HTTP_OK = 200;
@@ -27,12 +31,15 @@ const FAILURE = "failure";
 const ASSETS_DIR = "assets" + path.sep;
 const HOME = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
 const MAX_TRIES = 200;
-const SCRIPT_FILE = "index.js";
 const NAME = "Pull Up Flash";
 const INSTALLER_TITLE = "pull-up-flash-installer";
 const TITLE = "pull-up-flash";
 const INVISIBLE_VBS = "invisible.vbs";
 const STARTUP_BAT = "startup.bat";
+const SERVICE_NAME_LINUX = "pull-up-flash";
+const SERVICE_FILENAME_LINUX = `${SERVICE_NAME_LINUX}.service`;
+const SERVICE_LOCATION_LINUX = `/etc/systemd/system/${SERVICE_FILENAME_LINUX}`;
+const PROMPT_TITLE = "Pull Up Flash";
 
 let execFile = "";
 let argv = require("minimist")(process.argv.slice(2));
@@ -95,12 +102,15 @@ async function install() {
 
     function complete() {
         console.log("Process is complete. You can delete the installer if you like.");
-        console.log("Press any key to exit...");
-        process.stdin.setRawMode(true);
-        process.stdin.resume();
-        process.stdin.on('data', process.exit.bind(process, 0));
+        if( process.platform === "win32" ) {
+            console.log("Press any key to exit...");
+            process.stdin.setRawMode(true);
+            process.stdin.resume();
+            process.stdin.on('data', process.exit.bind(process, 0));
+        }
     }
 
+    let sudoCommands = [];
     console.log("---------------------------------------------------------");
     console.log("--------------------Pull Up Flash------------------------");
     console.log("---------------------------------------------------------");
@@ -115,25 +125,57 @@ async function install() {
         binaryFilename = binaryFilename[binaryFilename.length-1];
         await copyFile( binary, assetsFolder + binaryFilename );
 
+        console.log("Writing autostart files...");
         let startupCommand = "";
-        if( process.platform === "win32" ) {
-            // copy the invisible vbs
-            await copyFile(__dirname + path.sep + ASSETS_DIR + INVISIBLE_VBS, assetsFolder + INVISIBLE_VBS);
-            startupCommand = `wscript.exe "${assetsFolder + INVISIBLE_VBS}" "${assetsFolder + binaryFilename}"`;
-            // pkg cannot access wscript.exe, so we have to run a BAT file.
-            // start up will not require this
-            fs.writeFileSync(assetsFolder + STARTUP_BAT, startupCommand);
-        }
+        switch( process.platform ) {
+            case "win32":
+                // copy the invisible vbs
+                await copyFile(__dirname + path.sep + ASSETS_DIR + INVISIBLE_VBS, assetsFolder + INVISIBLE_VBS);
+                startupCommand = `wscript.exe "${assetsFolder + INVISIBLE_VBS}" "${assetsFolder + binaryFilename}"`;
+                // pkg cannot access wscript.exe, so we have to run a BAT file.
+                // start up will not require this
+                fs.writeFileSync(assetsFolder + STARTUP_BAT, startupCommand);
+                break;
+            case "linux":
+                fs.writeFileSync( assetsFolder + SERVICE_FILENAME_LINUX, `[Unit]
+Description=Click to open flash content on web pages in Flash Player
 
-        console.log("Starting instance...");
-        proc.spawn( assetsFolder + STARTUP_BAT, {
-            detached: true
-        } );
+[Service]
+Type=simple
+ExecStart="${assetsFolder + binaryFilename}"
+User=${process.env.USER}
+Environment=DISPLAY=:0
+
+[Install]
+WantedBy=multi-user.target`);
+                let saveDir = SERVICE_LOCATION_LINUX.split(path.sep);
+                saveDir.pop();
+                saveDir = saveDir.join(path.sep);
+                sudoCommands.push(`mv "${assetsFolder + SERVICE_FILENAME_LINUX}" "${saveDir}"`);
+                break;
+        }
 
         console.log("Enabling autostart...");
         switch( process.platform ) {
             case "win32":
                 startOnBoot.enableAutoStart( NAME, startupCommand, complete );
+                break;
+            case "linux":
+                sudoCommands.push(`systemctl enable ${SERVICE_NAME_LINUX}`);
+                break;
+        }
+
+        console.log("Starting instance...");
+        switch( process.platform ) {
+            case "win32":
+                proc.spawn( assetsFolder + STARTUP_BAT, {
+                    detached: true
+                } );
+                break;
+            case "linux":
+                sudoCommands.push(`systemctl start ${SERVICE_NAME_LINUX}`);
+                await sudoRun( sudoCommands.join(" && ") );
+                complete();
                 break;
         }
     }
@@ -145,6 +187,9 @@ async function install() {
             switch( process.platform ) {
                 case "win32":
                     proc.execSync(`taskkill /FI "WINDOWTITLE ne ${INSTALLER_TITLE}" /IM ${execFile} /F /T`);
+                    break;
+                case "linux":
+                    sudoCommands.push(`systemctl stop ${SERVICE_NAME_LINUX}`);
                     break;
             }
         }
@@ -158,7 +203,6 @@ async function install() {
         }
         catch(err) {
             // ok
-            console.log(err);
         }
 
         console.log("Disabling autostart...");
@@ -166,10 +210,34 @@ async function install() {
             case "win32":
                 startOnBoot.disableAutoStart( NAME, complete );
                 break;
+            case "linux":
+                sudoCommands.push(`systemctl disable ${SERVICE_NAME_LINUX}`);
+                sudoCommands.push(`rm -rf "${SERVICE_LOCATION_LINUX}"`);
+                await sudoRun( sudoCommands.join(" && ") );
+                complete();
+                break;
         }
     }
 
     return Promise.resolve();
+}
+
+/**
+ * Run a command as sudo.
+ * @param {string} command - The command to run.
+ */
+function sudoRun(command) {
+    return new Promise( ( resolve, reject ) => {
+        sudo.exec(command, {
+            name: PROMPT_TITLE
+        }, (error, stdout, stderr) => {
+            if( error ) {
+                console.log(error);
+                reject();
+            }
+            resolve();
+        });
+    } );
 }
 
  /**
@@ -247,14 +315,16 @@ function launchFlash( url ) {
     try {
         let spawned = proc.execFile(command, [url]);
         let tries = 0;
-        function focus() {
-            tries ++;
-            if( tries > MAX_TRIES ) return;
-            let window = windowManager.getWindows().filter(el => el.processId === spawned.pid  && el.getBounds().width > 0);
-            if( window.length < 2 ) setTimeout( focus, 50 );
-            else window[0].bringToTop();
+        if( process.platform === "win32" ) {
+            function focus() {
+                tries ++;
+                if( tries > MAX_TRIES ) return;
+                let window = windowManager.getWindows().filter(el => el.processId === spawned.pid  && el.getBounds().width > 0);
+                if( window.length < 2 ) setTimeout( focus, 50 );
+                else window[0].bringToTop();
+            }
+            focus();
         }
-        focus();
     }
     catch(err) {
         console.log(err);

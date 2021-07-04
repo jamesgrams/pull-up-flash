@@ -7,9 +7,12 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.17.1",
+    "minimist": "^1.2.5",
+    "sudo-prompt": "^9.2.1"
+  },
+  "optionalDependencies": {
     "node-window-manager": "^2.2.4",
-    "start-on-windows-boot": "^1.0.0",
-    "minimist": "^1.2.5"
+    "start-on-windows-boot": "^1.0.0"
   },
   "engines": {
     "node": ">= 6.0.0",

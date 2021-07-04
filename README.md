@@ -6,13 +6,14 @@ Click to open flash content on web pages in Flash Player. This lets you run flas
 
 ### Requirements
 
-You will need Windows or Linux. Mac is a work in progress. Linux install (persist beyond reboot) is also a work in progress.
+You will need Windows or Linux. Mac is a work in progress.
 
 ## Installing/Running
 
 1. Download and run the appropriate binary for your operating system from the releases section.
     * The standalone version will simply run while the window is open. The non-standalone version will install a silent background process that persists through reboot.
     * On Mac and Linux, you will likely have to make the file executable.
+    * On linux, if you run from the GUI by double clicking the file, you likely won't see a window, but it will still install!
 2. Open/run the file. If using the non-standalone version, you can run the file again to uninstall.
 3. Install the [Chrome Extension](https://github.com/jamesgrams/pull-up-flash-extension) in your browser.
 
@@ -30,6 +31,8 @@ You will need npm and Node.js installed. You will also need `pkg` installed (`np
     * Note: You need the version of node on your computer to match the version of node `pkg` will bundle.
 4. Run `npm build`
 5. The binaries will be located in the `dist` folder.
+
+Note: You should build the binaries on the platform you're building for. Specifically Windows, which has some dependencies that aren't installed on Linux and Mac during `npm install`, so they would not be bundled in the binary.
 
 ## Testing
 
