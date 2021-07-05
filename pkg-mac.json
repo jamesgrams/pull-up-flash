@@ -1,7 +1,10 @@
 {
   "pkg": {
     "scripts": ["index.js", "installer.js"],
-    "assets": "assets/flashplayer.dmg",
+    "assets": [
+      "assets/flashplayer.dmg",
+      "node_modules/node-window-manager/build/Release/*"
+    ],
     "targets": ["node12-macos-x64"]
   }
 }

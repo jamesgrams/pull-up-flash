@@ -6,7 +6,7 @@ Click to open flash content on web pages in Flash Player. This lets you run flas
 
 ### Requirements
 
-You will need Windows or Linux. Mac is a work in progress.
+Pull Up Flash works on Windows, Mac, and Linux.
 
 ## Installing/Running
 
@@ -15,6 +15,8 @@ You will need Windows or Linux. Mac is a work in progress.
     * On Mac and Linux, you will likely have to make the file executable.
     * On linux, if you run from the GUI by double clicking the file, you likely won't see a window, but it will still install!
 2. Open/run the file. If using the non-standalone version, you can run the file again to uninstall.
+    * On Mac, you may need to grant Accessibility permission. This is to allow Pull Up Flash to bring windows to the front.
+    * On Linux, you will be prompted for your root password (only in installer mode), in order to add your program as a startup service.
 3. Install the [Chrome Extension](https://github.com/jamesgrams/pull-up-flash-extension) in your browser.
 
 ### Additonal Notes

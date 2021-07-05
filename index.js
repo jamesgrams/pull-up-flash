@@ -4,10 +4,7 @@
  */
 
 // TODO
-// Get startup working on Mac
-// Get .dmg working on Mac
 // Never quit - catch errors and restart
-// security considerations
 
 /******************************* Configuration *******************************/
 
@@ -16,11 +13,14 @@ const proc = require("child_process");
 const fs = require("fs");
 const path = require("path");
 const sudo = require('sudo-prompt');
+const extractDmg = require("extract-dmg");
 let windowManager;
 let startOnBoot;
-if( process.platform === "win32" ) {
+if( process.platform === "win32" || process.platform === "darwin" ) {
     windowManager = require("node-window-manager").windowManager;
-    startOnBoot = require('start-on-windows-boot');
+    if( process.platform === "win32" ) {
+        startOnBoot = require('start-on-windows-boot');
+    }
 }
 
 const PORT = 35274; // Port to run on FLASH
@@ -40,16 +40,21 @@ const SERVICE_NAME_LINUX = "pull-up-flash";
 const SERVICE_FILENAME_LINUX = `${SERVICE_NAME_LINUX}.service`;
 const SERVICE_LOCATION_LINUX = `/etc/systemd/system/${SERVICE_FILENAME_LINUX}`;
 const PROMPT_TITLE = "Pull Up Flash";
+const MAC_OS_FLASH_FOLDER_NAME = "Flash Player";
+const MAC_ID = "net.game103.pull-up-flash";
+const MAC_PLIST = `${HOME}/Library/LaunchAgents/${MAC_ID}.plist`;
 
 let execFile = "";
 let argv = require("minimist")(process.argv.slice(2));
 let assetsFolder = "";
 let assetsFile = "";
+let zippedAssetsFile = "";
 let command = "";
 switch(process.platform) {
     case "darwin":
         assetsFolder = HOME + "/Library/Application Support/Pull Up Flash/";
-        assetsFile = "flashplayer.dmg";
+        zippedAssetsFile = "flashplayer.dmg";
+        assetsFile = "Flash Player/Flash Player.app/Contents/MacOS/Flash Player"; // assets file is used as a name in most places, so we have to be sure to use zipped assets file in those places
         break;
     case "win32":
         assetsFolder = HOME + "\\AppData\\Local\\Pull Up Flash\\";
@@ -83,8 +88,23 @@ command = assetsFolder + assetsFile;
     // set up needed files to run standalone or not
     if( !fs.existsSync(assetsFolder) ) {
         fs.mkdirSync(assetsFolder, { recursive: true });
+    }
+    if( !fs.existsSync( assetsFolder + assetsFile ) ) {
+        let binaryToCopy = process.platform === "darwin" ? zippedAssetsFile : assetsFile;
         // Copy the binary, installer script and the assets file over
-        await copyFile( __dirname + path.sep + ASSETS_DIR + assetsFile, assetsFolder + assetsFile );
+        await copyFile( __dirname + path.sep + ASSETS_DIR + binaryToCopy, assetsFolder + binaryToCopy );
+
+        if( process.platform === "darwin" ) {
+            if( !fs.existsSync( assetsFolder + MAC_OS_FLASH_FOLDER_NAME ) ) {
+                await extractDmg( assetsFolder + zippedAssetsFile, assetsFolder + MAC_OS_FLASH_FOLDER_NAME );
+                if( process.pkg ) {
+                    fs.unlinkSync( assetsFolder + zippedAssetsFile );
+                }
+            }
+        }
+    }
+    if( process.platform === "darwin" ) {
+        windowManager.requestAccessibility();
     }
 
     if( argv.install && execFolder !== assetsFolder ) await install();
@@ -153,6 +173,20 @@ WantedBy=multi-user.target`);
                 saveDir = saveDir.join(path.sep);
                 sudoCommands.push(`mv "${assetsFolder + SERVICE_FILENAME_LINUX}" "${saveDir}"`);
                 break;
+            case "darwin":
+                fs.writeFileSync( MAC_PLIST, `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>${MAC_ID}</string>
+    <key>ProgramArguments</key>
+    <array><string>${assetsFolder + binaryFilename}</string></array>
+    <key>RunAtLoad</key>
+    <true/>
+</dict>
+</plist>`);
+                break;
         }
 
         console.log("Enabling autostart...");
@@ -162,6 +196,9 @@ WantedBy=multi-user.target`);
                 break;
             case "linux":
                 sudoCommands.push(`systemctl enable ${SERVICE_NAME_LINUX}`);
+                break;
+            case "darwin":
+                proc.execSync(`launchctl load "${MAC_PLIST}"`);
                 break;
         }
 
@@ -177,6 +214,10 @@ WantedBy=multi-user.target`);
                 await sudoRun( sudoCommands.join(" && ") );
                 complete();
                 break;
+            case "darwin":
+                //proc.execSync(`launchctl start "${MAC_PLIST}"`);
+                complete();
+                break;
         }
     }
     else {
@@ -190,6 +231,9 @@ WantedBy=multi-user.target`);
                     break;
                 case "linux":
                     sudoCommands.push(`systemctl stop ${SERVICE_NAME_LINUX}`);
+                    break;
+                case "darwin":
+                    proc.execSync(`launchctl stop "${MAC_PLIST}"`);
                     break;
             }
         }
@@ -214,6 +258,11 @@ WantedBy=multi-user.target`);
                 sudoCommands.push(`systemctl disable ${SERVICE_NAME_LINUX}`);
                 sudoCommands.push(`rm -rf "${SERVICE_LOCATION_LINUX}"`);
                 await sudoRun( sudoCommands.join(" && ") );
+                complete();
+                break;
+            case "darwin":
+                proc.execSync(`launchctl unload "${MAC_PLIST}"`);
+                fs.unlinkSync(MAC_PLIST);
                 complete();
                 break;
         }
@@ -315,12 +364,13 @@ function launchFlash( url ) {
     try {
         let spawned = proc.execFile(command, [url]);
         let tries = 0;
-        if( process.platform === "win32" ) {
+        if( process.platform === "win32" || process.platform === "darwin" ) {
+            let neededWindowLength = process.platform === "win32" ? 2 : 1;
             function focus() {
                 tries ++;
                 if( tries > MAX_TRIES ) return;
                 let window = windowManager.getWindows().filter(el => el.processId === spawned.pid  && el.getBounds().width > 0);
-                if( window.length < 2 ) setTimeout( focus, 50 );
+                if( window.length < neededWindowLength ) setTimeout( focus, 50 );
                 else window[0].bringToTop();
             }
             focus();
