@@ -1,6 +1,8 @@
 # Pull Up Flash
 
-Click to open flash content on web pages in Flash Player. Pull Up Flash lets you run flash games and movies you come across online in 2021 and beyond in Chromium-based browsers (Google Chrome, Edge, Brace, Vivaldi, etc.) and Firefox.
+Click to open flash content on web pages in Flash Player.
+
+Pull Up Flash lets you run flash games and movies you come across online in 2021 and beyond in Chromium-based browsers (Google Chrome, Edge, Brace, Vivaldi, etc.) and Firefox.
 
 ## Files
 
