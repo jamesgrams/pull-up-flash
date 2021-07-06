@@ -1,6 +1,6 @@
 # Pull Up Flash
 
-Click to open flash content on web pages in Flash Player. This lets you run flash games and movies you come across online in 2021 and beyond in Chromium-based browsers (Google Chrome, Edge, Brace, Vivaldi, etc.).
+Click to open flash content on web pages in Flash Player. This lets you run flash games and movies you come across online in 2021 and beyond in Chromium-based browsers (Google Chrome, Edge, Brace, Vivaldi, etc.) and Firefox.
 
 ## Installation
 
@@ -17,7 +17,7 @@ Pull Up Flash works on Windows, Mac, and Linux.
 2. Open/run the file. If using the non-standalone version, you can run the file again to uninstall.
     * On Mac, you may need to grant Accessibility permission. This is to allow Pull Up Flash to bring windows to the front.
     * On Linux, you will be prompted for your root password (only in installer mode), in order to add your program as a startup service.
-3. Install the [Chrome Extension](https://github.com/jamesgrams/pull-up-flash-extension) in your browser.
+3. Install the [Browser Extension](https://github.com/jamesgrams/pull-up-flash-extension).
 
 ### Additonal Notes
 
