@@ -1,27 +1,42 @@
+<p align="center">
+  <img src="./assets/logo.png" alt="Pull Up Flash Logo" width="128"/>
+</p>
+
 # Pull Up Flash
 
 Click to open flash content on web pages in Flash Player. This lets you run flash games and movies you come across online in 2021 and beyond in Chromium-based browsers (Google Chrome, Edge, Brace, Vivaldi, etc.) and Firefox.
+
+## Files
+
+| Platform | Type       | Link      |
+| -------- |:-----------|:----------|
+| Windows  | Installer  | [Download](https://github.com/jamesgrams/pull-up-flash/releases/download/1.0.0/pull-up-flash-win.exe) |
+| Windows  | Standalone | [Download](https://github.com/jamesgrams/pull-up-flash/releases/download/1.0.0/pull-up-flash-win-standalone.exe) |
+| MacOS    | Installer  | [Download](https://github.com/jamesgrams/pull-up-flash/releases/download/1.0.0/pull-up-flash-mac.zip) |
+| MacOS    | Standalone | [Download](https://github.com/jamesgrams/pull-up-flash/releases/download/1.0.0/pull-up-flash-mac-standalone.zip) |
+| Linux    | Installer  | [Download](https://github.com/jamesgrams/pull-up-flash/releases/download/1.0.0/pull-up-flash-linux.zip) |
+| Linux    | Standalone | [Download](https://github.com/jamesgrams/pull-up-flash/releases/download/1.0.0/pull-up-flash-linux-standalone.zip) |
 
 ## Installation
 
 ### Requirements
 
-Pull Up Flash works on Windows, Mac, and Linux.
+Pull Up Flash works on Windows, Mac, and Linux. 64-bit architecture is required.
 
-## Installing/Running
+### Steps
 
-1. Download and run the appropriate binary for your operating system from the releases section.
-    * The standalone version will simply run while the window is open. The non-standalone version will install a silent background process that persists through reboot.
-    * On Mac and Linux, you will have to unzip the file first.
-    * On Linux, if you run from the GUI by double clicking the file, you likely won't see a window, but it will still install!
+1. Download the appropriate binary for your operating system from the [releases section](https://github.com/jamesgrams/pull-up-flash/releases) or by clicking the link above.
+    * The standalone version will run while the window is open. The installer version will install a silent background process that persists through reboot.
+    * On Mac and Linux, you will have to unzip the file.
 2. Open/run the file. If using the non-standalone version, you can run the file again to uninstall.
     * On Mac, you may need to grant Accessibility permission. This is to allow Pull Up Flash to bring windows to the front.
     * On Linux, you will be prompted for your root password (only in installer mode), in order to add your program as a startup service.
+    * On Linux, if you run from the GUI by double clicking the file, you likely won't see a window, but it will still install!
 3. Install the [Browser Extension](https://github.com/jamesgrams/pull-up-flash-extension).
 
-### Additonal Notes
+### Additional Notes
 
-*. On Ubuntu with Nvidia drivers, you may get some strange displays. You will need to disable hardware acceleration by right clicking the game/movie in Flash Player > Settings > Disable Hardware Acceleration.
+* On Ubuntu with Nvidia drivers, you may get some strange displays. You will need to disable hardware acceleration by right clicking the game/movie in Flash Player > Settings > Disable Hardware Acceleration.
 
 ## Building
 
@@ -47,21 +62,19 @@ The Flash Player web plugin is no longer supported, but Flash player for desktop
 ## Tested Sites
 
 ### Working
-* https://newgrounds.com
-* https://maxgames.com
-* https://crazymonkeygames.com
-* https://bigdino.com
-* https://onemorelevel.com
-* https://andkon.com
-* https://y8.com
-* https://freewebarcade.com
-* https://www.primarygames.com
-* https://game103.net
-* http://www.notdoppler.com
-* http://www.xgenstudios.com
+* [andkon.com](https://andkon.com)
+* [bigdino.com](https://bigdino.com)
+* [crazymonkeygames.com](https://crazymonkeygames.com)
+* [freewebarcade.com](https://freewebarcade.com)
+* [game103.net](https://game103.net)
+* [maxgames.com](https://maxgames.com)
+* [newgrounds.com](https://maxgames.com)
+* [notdoppler.com](http://www.notdoppler.com)
+* [onemorelevel.com](https://onemorelevel.com)
+* [primarygames.com](https://www.primarygames.com)
+* [xgenstudios.com](http://www.xgenstudios.com)
+* [y8.com](https://y8.com)
 
 ### Not Working
-* https://kongregate.com
-* https://coolmathgames.com
-
-![Pull Up Flash Logo](./assets/logo.png)
+* [coolmathgames.com](https://coolmathgames.com)
+* [kongregate.com](https://kongregate.com)
