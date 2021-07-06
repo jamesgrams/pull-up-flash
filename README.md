@@ -49,7 +49,7 @@ The Flash Player web plugin is no longer supported, but Flash player for desktop
 * [freewebarcade.com](https://freewebarcade.com)
 * [game103.net](https://game103.net)
 * [maxgames.com](https://maxgames.com)
-* [newgrounds.com](https://maxgames.com)
+* [newgrounds.com](https://newgrounds.com)
 * [notdoppler.com](http://www.notdoppler.com)
 * [onemorelevel.com](https://onemorelevel.com)
 * [primarygames.com](https://www.primarygames.com)
