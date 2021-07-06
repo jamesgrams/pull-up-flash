@@ -5,7 +5,7 @@ Click to open flash content on web pages in Flash Player. This lets you run flas
 ## Files
 
 | Platform | Type       | Link      |
-| -------- |:-----------|:----------|
+|:---------|:-----------|:----------|
 | Windows  | Installer  | [Download](https://github.com/jamesgrams/pull-up-flash/releases/download/1.0.0/pull-up-flash-win.exe) |
 | Windows  | Standalone | [Download](https://github.com/jamesgrams/pull-up-flash/releases/download/1.0.0/pull-up-flash-win-standalone.exe) |
 | MacOS    | Installer  | [Download](https://github.com/jamesgrams/pull-up-flash/releases/download/1.0.0/pull-up-flash-macos.zip) |
@@ -34,23 +34,6 @@ Pull Up Flash works on Windows, Mac, and Linux. 64-bit architecture is required.
 
 * On Ubuntu with Nvidia drivers, you may get some strange displays. You will need to disable hardware acceleration by right clicking the game/movie in Flash Player > Settings > Disable Hardware Acceleration.
 
-## Building
-
-You will need npm and Node.js installed. You will also need `pkg` installed (`npm install -g pkg`).
-
-1. Download this repository
-2. `cd` to this repository
-3. Run `npm install`
-    * Note: You need the version of node on your computer to match the version of node `pkg` will bundle.
-4. Run `npm build`
-5. The binaries will be located in the `dist` folder.
-
-Note: You should build the binaries on the platform you're building for. Specifically Windows, which has some dependencies that aren't installed on Linux and Mac during `npm install`, so they would not be bundled in the binary.
-
-## Testing
-
-You can simply run `npm start` after running `npm install` to test. You can use the `--install` flag too, but it may not work. The installer is designed to be run from the `pkg`ed version.
-
 ## Full Description
 
 The Flash Player web plugin is no longer supported, but Flash player for desktop is still [distributed by Adobe](https://www.adobe.com/support/flashplayer/debug_downloads.html). Pull Up Flash allows you to easily run Flash content by replacing it on web pages with a button you can click to open the game or movie in Flash Player for desktop.
@@ -74,6 +57,25 @@ The Flash Player web plugin is no longer supported, but Flash player for desktop
 ### Not Working
 * [coolmathgames.com](https://coolmathgames.com)
 * [kongregate.com](https://kongregate.com)
+
+## For Developers
+
+### Building
+
+You will need npm and Node.js installed. You will also need `pkg` installed (`npm install -g pkg`).
+
+1. Download this repository
+2. `cd` to this repository
+3. Run `npm install`
+    * Note: You need the version of node on your computer to match the version of node `pkg` will bundle.
+4. Run `npm build`
+5. The binaries will be located in the `dist` folder.
+
+Note: You should build the binaries on the platform you're building for. Specifically Windows, which has some dependencies that aren't installed on Linux and Mac during `npm install`, so they would not be bundled in the binary.
+
+### Testing
+
+You can simply run `npm start` after running `npm install` to test. You can use the `--install` flag too, but it may not work. The installer is designed to be run from the `pkg`ed version.
 
 <p align="center">
   <img src="./assets/logo.png" alt="Pull Up Flash Logo" width="128"/>
