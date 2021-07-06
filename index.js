@@ -3,9 +3,6 @@
  * @author James Grams
  */
 
-// TODO
-// Never quit - catch errors and restart
-
 /******************************* Configuration *******************************/
 
 const express = require("express");

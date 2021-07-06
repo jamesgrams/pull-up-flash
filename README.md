@@ -47,16 +47,21 @@ The Flash Player web plugin is no longer supported, but Flash player for desktop
 ## Tested Sites
 
 ### Working
+* https://newgrounds.com
 * https://maxgames.com
 * https://crazymonkeygames.com
 * https://bigdino.com
 * https://onemorelevel.com
 * https://andkon.com
 * https://y8.com
+* https://freewebarcade.com
+* https://www.primarygames.com
 * https://game103.net
+* http://www.notdoppler.com
+* http://www.xgenstudios.com
 
 ### Not Working
-* https://newgrounds.com
 * https://kongregate.com
+* https://coolmathgames.com
 
 ![Pull Up Flash Logo](./assets/logo.png)
