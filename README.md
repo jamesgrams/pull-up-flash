@@ -12,8 +12,8 @@ Pull Up Flash works on Windows, Mac, and Linux.
 
 1. Download and run the appropriate binary for your operating system from the releases section.
     * The standalone version will simply run while the window is open. The non-standalone version will install a silent background process that persists through reboot.
-    * On Mac and Linux, you will likely have to make the file executable.
-    * On linux, if you run from the GUI by double clicking the file, you likely won't see a window, but it will still install!
+    * On Mac and Linux, you will have to unzip the file first.
+    * On Linux, if you run from the GUI by double clicking the file, you likely won't see a window, but it will still install!
 2. Open/run the file. If using the non-standalone version, you can run the file again to uninstall.
     * On Mac, you may need to grant Accessibility permission. This is to allow Pull Up Flash to bring windows to the front.
     * On Linux, you will be prompted for your root password (only in installer mode), in order to add your program as a startup service.
