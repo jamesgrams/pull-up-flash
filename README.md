@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="./assets/logo.png" alt="Pull Up Flash Logo" width="128"/>
-</p>
-
 # Pull Up Flash
 
 Click to open flash content on web pages in Flash Player. This lets you run flash games and movies you come across online in 2021 and beyond in Chromium-based browsers (Google Chrome, Edge, Brace, Vivaldi, etc.) and Firefox.
@@ -12,8 +8,8 @@ Click to open flash content on web pages in Flash Player. This lets you run flas
 | -------- |:-----------|:----------|
 | Windows  | Installer  | [Download](https://github.com/jamesgrams/pull-up-flash/releases/download/1.0.0/pull-up-flash-win.exe) |
 | Windows  | Standalone | [Download](https://github.com/jamesgrams/pull-up-flash/releases/download/1.0.0/pull-up-flash-win-standalone.exe) |
-| MacOS    | Installer  | [Download](https://github.com/jamesgrams/pull-up-flash/releases/download/1.0.0/pull-up-flash-mac.zip) |
-| MacOS    | Standalone | [Download](https://github.com/jamesgrams/pull-up-flash/releases/download/1.0.0/pull-up-flash-mac-standalone.zip) |
+| MacOS    | Installer  | [Download](https://github.com/jamesgrams/pull-up-flash/releases/download/1.0.0/pull-up-flash-macos.zip) |
+| MacOS    | Standalone | [Download](https://github.com/jamesgrams/pull-up-flash/releases/download/1.0.0/pull-up-flash-macos-standalone.zip) |
 | Linux    | Installer  | [Download](https://github.com/jamesgrams/pull-up-flash/releases/download/1.0.0/pull-up-flash-linux.zip) |
 | Linux    | Standalone | [Download](https://github.com/jamesgrams/pull-up-flash/releases/download/1.0.0/pull-up-flash-linux-standalone.zip) |
 
@@ -78,3 +74,7 @@ The Flash Player web plugin is no longer supported, but Flash player for desktop
 ### Not Working
 * [coolmathgames.com](https://coolmathgames.com)
 * [kongregate.com](https://kongregate.com)
+
+<p align="center">
+  <img src="./assets/logo.png" alt="Pull Up Flash Logo" width="128"/>
+</p>
