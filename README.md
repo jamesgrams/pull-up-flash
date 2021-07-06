@@ -24,10 +24,10 @@ Pull Up Flash works on Windows, Mac, and Linux. 64-bit architecture is required.
 1. Download the appropriate binary for your operating system from the [releases section](https://github.com/jamesgrams/pull-up-flash/releases) or by clicking the link above.
     * The standalone version will run while the window is open. The installer version will install a silent background process that persists through reboot.
     * On Mac and Linux, you will have to unzip the file.
-2. Open/run the file. If using the non-standalone version, you can run the file again to uninstall.
+2. Open/run the file. If using the installer version, you can run the file again to uninstall.
     * On Mac, you may need to grant Accessibility permission. This is to allow Pull Up Flash to bring windows to the front.
     * On Linux, you will be prompted for your root password (only in installer mode), in order to add your program as a startup service.
-    * On Linux, if you run from the GUI by double clicking the file, you likely won't see a window, but it will still install!
+    * On Linux, if you run from the GUI by double-clicking the file, you likely won't see a window, but it will still install!
 3. Install the [Browser Extension](https://github.com/jamesgrams/pull-up-flash-extension).
 
 ### Additional Notes
