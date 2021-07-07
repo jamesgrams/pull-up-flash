@@ -1,8 +1,6 @@
-# Pull Up Flash
-
 <p align="center">
    <a target="_blank" href="https://www.youtube.com/watch?v=pjKf-pMySpI">
-      <img src="https://img.youtube.com/vi/pjKf-pMySpI/0.jpg" alt="Pull Up Flash Intro Video"/>
+      <img src="https://img.youtube.com/vi/pjKf-pMySpI/0.jpg" alt="Pull Up Flash Intro Video" width="350" height="195" style="object-fit:cover"/>
    </a>
 </p>
 
