@@ -21,6 +21,13 @@ Pull Up Flash lets you run flash games and movies you come across online in 2021
 | Linux    | Installer  | [Download](https://github.com/jamesgrams/pull-up-flash/releases/download/1.0.0/pull-up-flash-linux.zip) |
 | Linux    | Standalone | [Download](https://github.com/jamesgrams/pull-up-flash/releases/download/1.0.0/pull-up-flash-linux-standalone.zip) |
 
+### Extensions
+
+| Browser | Link      |
+|:--------|:----------|
+| Chrome  | [Install](https://chrome.google.com/webstore/detail/pull-up-flash/fbhapfcojegildkbfcidlnknbamgibkl) |
+| Firefox  | [Install](https://addons.mozilla.org/en-US/firefox/addon/pull-up-flash/) |
+
 ## Installation
 
 ### Requirements
@@ -36,7 +43,10 @@ Pull Up Flash works on Windows, Mac, and Linux. 64-bit architecture is required.
     * On Mac, you may need to grant Accessibility permission. This is to allow Pull Up Flash to bring windows to the front.
     * On Linux, you will be prompted for your root password (only in installer mode), in order to add your program as a startup service.
     * On Linux, if you run from the GUI by double-clicking the file, you likely won't see a window, but it will still install!
-3. Install the [Browser Extension](https://github.com/jamesgrams/pull-up-flash-extension).
+3. Install the Browser Extension.
+    * [Chrome Download](https://chrome.google.com/webstore/detail/pull-up-flash/fbhapfcojegildkbfcidlnknbamgibkl)
+    * [Firefox Download](https://addons.mozilla.org/en-US/firefox/addon/pull-up-flash/)
+    * [Source Code](https://github.com/jamesgrams/pull-up-flash-extension)
 
 ### Additional Notes
 
